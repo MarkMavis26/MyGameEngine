@@ -1,30 +1,3 @@
-// // /js/game.js
-// var $container = document.getElementById('container');
-
-// // Create base game class
-// function Game() {
-//     this.viewport = document.createElement('canvas');
-//     this.context = viewport.getContext('2d');
-
-//     this.viewport.width = 800;
-//     this.viewport.height = 600;
-
-//     // Append the canvas node to our container
-//     $container.insertBefore(this.viewport, $container.firstChild);
-
-//     // Toss some text into our canvas
-//     this.context.font = '32px Arial';
-//     this.context.fillText('It\'s dangerous to travel this route alone.', 5, 50, 800);
-
-//     return this;
-// }
-
-// // Instantiate the game in a global
-// window.game = new Game();
-
-// // Export the game as a module
-// module.exports = game;
-
 var cUtils = require('./utils/utils.canvas.js'),
     $container = document.getElementById('container');
 
@@ -51,3 +24,41 @@ function Game(w, h) {
 window.game = new Game(800, 600);
 
 module.exports = game;
+
+function Game(w, h, targetFps, showFps) {
+    // Setup some constants
+    this.constants = {
+        width: w,
+        height: h,
+        targetFps: targetFps,
+        showFps: showFps
+    };
+
+    // Instantiate an empty state object
+    this.state = {};
+    
+    that = this;
+
+var createPlayer = function createPlayer() {
+    // Set the state.entities prop to an empty object if it does not exist
+    that.state.entities = that.state.entities || {};
+    // Instantiate a player as an active entity
+    that.state.entities.player = new playerEnt(
+        that,
+        that.constants.width / 2,
+        that.constants.height - 100
+    );
+}();
+
+    $container.insertBefore(this.viewport, $container.firstChild);
+
+    // Instantiate core modules with the current scope
+    this.update = gameUpdate( this );
+    this.render = gameRender( this );
+    this.loop = gameLoop( this );
+
+    return this;
+}
+
+// Instantiate a new game in the global scope at 800px by 600px
+window.game = new Game(800, 600, 60, true);
