@@ -11,7 +11,7 @@ var game = function game() {
   this.context = viewport.getContext('2d');
 
   context.font = '32px Arial';
-  context.fillText('Youre gay', 5, 50, 800);
+  context.fillText('Hello world', 5, 50, 800);
 
   return this;
 };

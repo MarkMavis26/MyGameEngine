@@ -17,7 +17,7 @@ function gameRender( scope ) {
         // Spit out some text
         scope.context.font = '32px Arial';
         scope.context.fillStyle = '#fff';
-        scope.context.fillText('You\'re gay.', 5, 50);
+        scope.context.fillText('Hello world.', 5, 50);
 
         // If we want to show the FPS, then render it in the top right corner.
         if (scope.constants.showFps) {
