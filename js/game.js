@@ -1,8 +1,10 @@
+    // Modules
 var gameLoop = require('./core/game.loop.js'),
     gameUpdate = require('./core/game.update.js'),
     gameRender = require('./core/game.render.js'),
     // Entities
     playerEnt = require('./players/player.js'),
+    EnemyEnt =  require('./players/enemy.js'),
     // Utilities
     cUtils = require('./utils/utils.canvas.js'), // require our canvas utils
     $container = document.getElementById('container');
@@ -41,6 +43,13 @@ function Game(w, h, targetFps, showFps) {
     var createPlayer = function createPlayer() {
         that.state.entities = that.state.entities || {};
         that.state.entities.player = new playerEnt(that, (w / 2), (h - 100));
+    }();
+
+    var createEnemy = function createEnemy() {
+        
+
+        that.state.entities = that.state.entities || {};
+        that.state.entities.enemy = new enemyEnt(that, (w / 2), (h - 110));
     }();
 
     return this;

@@ -13,7 +13,7 @@ function Player(scope, x, y) {
             x: x,
             y: y
         },
-        moveSpeed: 1.5
+        moveSpeed: 3
     };
 
     // Set up any other constants

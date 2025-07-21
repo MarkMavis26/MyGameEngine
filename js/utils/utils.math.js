@@ -1,4 +1,4 @@
-/**
+/** 
  * Number.prototype.boundary
  * Binds a number between a minimum and a maximum amount.
  * var x = 12 * 3;

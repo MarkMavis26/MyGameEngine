@@ -1,15 +1,16 @@
 /** Game Loop Module
- * Handles updating the game state and re-rendering the canvas
- * at the configured FPS.
+ * This module contains the game loop, which handles
+ * updating the game state and re-rendering the canvas
+ * (using the updated state) at the configured FPS.
  */
-function gameLoop(scope) {
+function gameLoop ( scope ) {
     var loop = this;
 
-    // Initialize timer variables
-    var fps = scope.constants.targetFps, // Target FPS
-        fpsInterval = 1000 / fps,        // Interval between frames in ms
-        before = window.performance.now(), // Starting timestamp
-
+    // Initialize timer variables so we can calculate FPS
+    var fps = scope.constants.targetFps,
+        fpsInterval = 1000 / fps,
+        before = window.performance.now(),
+        // Set up an object to contain our alternating FPS calculations
         cycles = {
             new: {
                 frameCount: 0,
@@ -19,41 +20,52 @@ function gameLoop(scope) {
             old: {
                 frameCount: 0,
                 startTime: before,
-                sinceStart: 0 // fixed typo here
+                sineStart: 0
             }
         },
-        resetInterval = 5,  // seconds
-        resetState = 'new'; // initial cycle
+        // Alternating Frame Rate vars
+        resetInterval = 5,
+        resetState = 'new';
 
-    loop.fps = 0; // Expose FPS to other modules
+    loop.fps = 0;
 
-    loop.main = function mainLoop(tframe) {
-        // Request next animation frame
-        loop.stopLoop = window.requestAnimationFrame(loop.main);
+    // Main game rendering loop
+    loop.main = function mainLoop( tframe ) {
+        // Request a new Animation Frame
+        // setting to `stopLoop` so animation can be stopped via
+        // `window.cancelAnimationFrame( loop.stopLoop )`
+        loop.stopLoop = window.requestAnimationFrame( loop.main );
 
-        // Calculate elapsed time
+        // How long ago since last loop?
         var now = tframe,
-            elapsed = now - before;
+            elapsed = now - before,
+            activeCycle, targetResetInterval;
 
+        // If it's been at least our desired interval, render
         if (elapsed > fpsInterval) {
-            // Adjust before time for next frame
+            // Set before = now for next frame, also adjust for 
+            // specified fpsInterval not being a multiple of rAF's interval (16.7ms)
+            // ( http://stackoverflow.com/a/19772220 )
             before = now - (elapsed % fpsInterval);
 
-            // Increment frame counts
+            // Increment the vals for both the active and the alternate FPS calculations
             for (var calc in cycles) {
                 ++cycles[calc].frameCount;
                 cycles[calc].sinceStart = now - cycles[calc].startTime;
             }
 
-            // Calculate FPS
-            var activeCycle = cycles[resetState];
+            // Choose the correct FPS calculation, then update the exposed fps value
+            activeCycle = cycles[resetState];
             loop.fps = Math.round(1000 / (activeCycle.sinceStart / activeCycle.frameCount) * 100) / 100;
 
-            // Reset frame counts if needed
-            var targetResetInterval = (cycles.new.frameCount === cycles.old.frameCount
-                ? resetInterval * fps
-                : (resetInterval * 2) * fps);
+            // If our frame counts are equal....
+            targetResetInterval = (cycles.new.frameCount === cycles.old.frameCount 
+                                   ? resetInterval * fps // Wait our interval
+                                   : (resetInterval * 2) * fps); // Wait double our interval
 
+            // If the active calculation goes over our specified interval,
+            // reset it to 0 and flag our alternate calculation to be active
+            // for the next series of animations.
             if (activeCycle.frameCount > targetResetInterval) {
                 cycles[resetState].frameCount = 0;
                 cycles[resetState].startTime = now;
@@ -62,13 +74,14 @@ function gameLoop(scope) {
                 resetState = (resetState === 'new' ? 'old' : 'new');
             }
 
-            // Update and render
-            scope.update(now);
+            // Update the game state
+            scope.state = scope.update( now );
+            // Render the next frame
             scope.render();
         }
     };
 
-    // Start the loop
+    // Start off main loop
     loop.main();
 
     return loop;

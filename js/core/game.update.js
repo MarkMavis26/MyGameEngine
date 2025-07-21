@@ -18,7 +18,7 @@ function gameUpdate ( scope ) {
         }
 
         return state;
-    }
+    }   
 }
 
 module.exports = gameUpdate;

@@ -1,11 +1,11 @@
 /** keysDown Utility Module
- * Monitors and determines whether a key
+ * Monitors and determines whether a key 
  * is pressed down at any given moment.
  * Returns getters for each key.
  */
 function keysDown() {
-    // Set isPressed to an empty object
     this.isPressed = {};
+
     var left, right, up, down;
 
     // Set up `onkeydown` event handler.

@@ -13,16 +13,16 @@ function gameRender( scope ) {
     return function render() {
         // Clear out the canvas
         scope.context.clearRect(0, 0, w, h);
-
+        
         // Spit out some text
         scope.context.font = '32px Arial';
         scope.context.fillStyle = '#fff';
-        scope.context.fillText('It\'s dangerous to travel this route alone.', 5, 50);
+        scope.context.fillText('You\'re gay.', 5, 50);
 
         // If we want to show the FPS, then render it in the top right corner.
         if (scope.constants.showFps) {
             scope.context.fillStyle = '#ff0';
-            scope.context.fillText(scope.context.fillText(scope.loop.fps, w - 100, 50));
+            scope.context.fillText(scope.loop.fps, w - 100, 50);
         }
 
         // If there are entities, iterate through them and call their `render` methods
@@ -32,6 +32,10 @@ function gameRender( scope ) {
             for (var entity in entities) {
                 // Fire off each active entities `render` method
                 entities[entity].render();
+                console.log("Rendering entity:", entity);
+                scope.context.fillStyle = '#00FF00';
+                scope.context.fillRect(10, 10, 50, 50);
+
             }
         }
     }
